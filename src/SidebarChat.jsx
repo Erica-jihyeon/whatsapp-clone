@@ -24,6 +24,7 @@ function SidebarChat({ id, name, addNewChat }) {
   };
 
   return !addNewChat ? (
+    //<Link> => when click the chat room, url is gonna be /rooms/:roomId
     <Link to={`/rooms/${id}`}>
       <div className="sidebarChat">
         <Avatar src={`https://avatars.dicebear.com/api/human/${seed}.svg`} />
