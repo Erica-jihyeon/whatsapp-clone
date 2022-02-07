@@ -14,6 +14,7 @@ function Chat() {
   const [seed, setSeed] = useState("");
   const { roomId } = useParams();
   const [roomName, setRoomName] = useState("");
+  const [messages, setMessages] = useState([]);
 
   //get the roomId from the url
   //=> find room name from db => setRoomName on chat
@@ -22,13 +23,16 @@ function Chat() {
       db.collection('rooms').doc(roomId).onSnapshot(snapshot => (
         setRoomName(snapshot.data().name)
       ))
-      setSeed(Math.floor(Math.random() * 5000));
+
+      db.collection('rooms').doc(roomId).collection('messages').orderBy('timestamp', 'asc').onSnapshot(snapshot => (
+        setMessages(snapshot.docs.map(doc => doc.data()))
+      ))
     }
   }, [roomId])
 
-  // useEffect(() => {
-  //   setSeed(Math.floor(Math.random() * 5000));
-  // }, [])
+  useEffect(() => {
+    setSeed(Math.floor(Math.random() * 5000));
+  }, [roomId])
 
   const sendMessage = (e) => {
     e.preventDefault();
@@ -59,12 +63,15 @@ function Chat() {
       </div>
 
       <div className="chat__body">
-        {/* check user */}
-        <p className={`chat__message ${true && 'chat__receiver'}`}>
-          <span className="chat__name">{`Erica`}</span>
-          Hey Guys
-          <span className="chat__timestamp">3:52pm</span>
+        {messages.map((message) => (
+          <p className={`chat__message ${true && 'chat__receiver'}`}>
+          <span className="chat__name">{message.name}</span>
+          {message.message}
+          <span className="chat__timestamp">
+            {new Date(message.timestamp?.toDate()).toUTCString()}
+          </span>
         </p>
+        ))}
       </div>
 
       <div className="chat__footer">
