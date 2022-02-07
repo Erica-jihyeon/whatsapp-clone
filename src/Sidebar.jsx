@@ -33,8 +33,8 @@ function Sidebar() {
   return (
     <div className="sidebar">
       <div className="sidebar__header">
-        <Avatar />
-        {/* <Avatar src={user?.photoURL}/> */}
+        {/* <Avatar /> */}
+        <Avatar src={user?.photoURL}/>
         <div className="sidebar__headerRight">
           <IconButton>
             <DonutLargeIcon />
