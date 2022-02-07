@@ -18,7 +18,7 @@ function Chat() {
   const { roomId } = useParams();
   const [roomName, setRoomName] = useState("");
   const [messages, setMessages] = useState([]);
-  const [{user}, dispatch] = useStateValue();
+  const [{ user }, dispatch] = useStateValue();
 
   //get the roomId from the url
   //=> find room name from db => setRoomName on chat
@@ -58,7 +58,10 @@ function Chat() {
         <Avatar src={`https://avatars.dicebear.com/api/human/${seed}.svg`} />
         <div className="chat__headerInfo">
           <h3>{roomName}</h3>
-          <p>Last seen at ...</p>
+          <p>
+            Last seen at{" "}
+            {new Date(messages[messages.length - 1]?.timestamp?.toDate()).toUTCString()}
+          </p>
         </div>
 
         <div className="chat__headerRight">
@@ -77,19 +80,19 @@ function Chat() {
       <div className="chat__body">
         {messages.map((message) => (
           <p className={`chat__message ${message.name === user.displayName && 'chat__receiver'}`}>
-          <span className="chat__name">{message.name}</span>
-          {message.message}
-          <span className="chat__timestamp">
-            {new Date(message.timestamp?.toDate()).toUTCString()}
-          </span>
-        </p>
+            <span className="chat__name">{message.name}</span>
+            {message.message}
+            <span className="chat__timestamp">
+              {new Date(message.timestamp?.toDate()).toUTCString()}
+            </span>
+          </p>
         ))}
       </div>
 
       <div className="chat__footer">
         <InsertEmoticonIcon />
         <form>
-          <input value={input} onChange={e => setInput(e.target.value)} type="text" placeholder="Type a message"/>
+          <input value={input} onChange={e => setInput(e.target.value)} type="text" placeholder="Type a message" />
           <button onClick={sendMessage} type="submit">Send a message</button>
         </form>
         <MicIcon />
