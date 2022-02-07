@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import './Chat.css';
 import { useParams } from "react-router-dom";
 import db from './firebase';
+// this is for timestamp
+import firebase from 'firebase/compat/app';
+import { useStateValue } from './StateProvider';
 
 import { Avatar, IconButton } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -15,6 +18,7 @@ function Chat() {
   const { roomId } = useParams();
   const [roomName, setRoomName] = useState("");
   const [messages, setMessages] = useState([]);
+  const [{user}, dispatch] = useStateValue();
 
   //get the roomId from the url
   //=> find room name from db => setRoomName on chat
@@ -36,6 +40,14 @@ function Chat() {
 
   const sendMessage = (e) => {
     e.preventDefault();
+    db.collection('rooms').doc(roomId).collection('messages').add({
+      message: input,
+      //from google Auth
+      name: user.displayName,
+      //use serverTime for saving, because users live all around the world
+      //and when we display it, change the time zone for each user
+      timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    })
     // console.log(input);
     setInput("");
   }
@@ -64,7 +76,7 @@ function Chat() {
 
       <div className="chat__body">
         {messages.map((message) => (
-          <p className={`chat__message ${true && 'chat__receiver'}`}>
+          <p className={`chat__message ${message.name === user.displayName && 'chat__receiver'}`}>
           <span className="chat__name">{message.name}</span>
           {message.message}
           <span className="chat__timestamp">
