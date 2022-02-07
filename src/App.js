@@ -6,9 +6,12 @@ import Login from './Login';
 //npm install react-router-dom
 //switch error? => npm install react-router-dom@5
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { useStateValue } from './StateProvider';
 
 function App() {
-  const [user, setUser] = useState(null);
+  // const [user, setUser] = useState(null);
+  // const [user, setUser] = useState('Erica');
+  const [{user}, dispatch] = useStateValue();
 
   return (
     <div className="App">

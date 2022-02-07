@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './Sidebar.css';
 import SidebarChat from './SidebarChat';
 import db from "./firebase";
+import { useStateValue } from './StateProvider';
 
 import { Avatar, IconButton } from '@mui/material';
 import DonutLargeIcon from '@mui/icons-material/DonutLarge';
@@ -12,6 +13,7 @@ import { SearchOutlined } from '@mui/icons-material';
 
 function Sidebar() {
   const [rooms, setRooms] = useState([]);
+  const [{user}, dispatch] = useStateValue();
   
   useEffect(() => {
     // actions performed when component mounts
@@ -32,6 +34,7 @@ function Sidebar() {
     <div className="sidebar">
       <div className="sidebar__header">
         <Avatar />
+        {/* <Avatar src={user?.photoURL}/> */}
         <div className="sidebar__headerRight">
           <IconButton>
             <DonutLargeIcon />
